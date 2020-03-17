@@ -1,22 +1,74 @@
 'use strict';
 
+const statusMessage = document.createElement('div'),
+      inputMessage = 'Заполните все поля!',
+      question = document.querySelector('.form-question'),
+      questionBtn = document.querySelector('.consultation-btn');
+      statusMessage.style.fontSize = '2rem;';
+
+// является ли модальное окно калькулятором/акцией
+let isCalc = '';
+
+// функция удаления сообщения статуса
+const removeMessage = () => {
+  setTimeout(() => {
+    statusMessage.remove();
+  }, 3000);
+};
+
+const deleteInputs = (event) => {
+  let target = event.target;
+  if (target.querySelector('input[name = "user_phone"]')){
+    target.querySelector('input[name = "user_phone"]').value = '';
+  }
+  if (target.querySelector('input[name = "user_name"]')){
+    target.querySelector('input[name = "user_name"]').value = '';
+  }
+  };
+
+// объект для всех остальных модальных окон
+let questionForm = {
+  question: null,
+  userName: '',
+  userPhone: ''
+}
+// объект для акции и калькулятора
+let calcMemory = {
+  userName: '',
+  userPhone: '',
+  cameras: 0,
+  floors: 0,
+  diameterOneValue: 0,
+  ringsOneValue: 0,
+  diameterTwoValue: 0,
+  ringsTwoValue: 0,
+  sum: 0,
+  distance: ''
+};
+
+  
 
 // модальные окна
-const togglePopup = (popupModal, selectorButton) => {
- const popup = document.querySelector(popupModal),
-       consultInput = document.querySelector('.form-question'),
-       consultBtn = document.querySelector('.consultation-btn');
-
-
-let popupButton = document.querySelectorAll(selectorButton);
+const togglePopup = (popupModal, selectorButton, statusCalc) => {
+  
+ const popup = document.querySelector(popupModal);
+ let popupButton = document.querySelectorAll(selectorButton);
 
 popupButton.forEach((item) => {
   item.addEventListener('click', (event) => {
+    let target = event.target;
     event.preventDefault();
-  if (item === consultBtn && consultInput.value.trim() === ''){
-    console.log('введи данные');
+    popup.style.display = 'block';
+    isCalc = statusCalc;
+
+  if (item === questionBtn && question.value.trim() === ''){
+    target.appendChild(statusMessage);
+    statusMessage.textContent = inputMessage;
+    statusMessage.style.paddingTop = '30px';
+    statusMessage.style.color= 'red';
+    removeMessage();
+    popup.style.display = 'none';
   }
-  popup.style.display = 'block';
 })
 })
 
@@ -24,20 +76,40 @@ popup.addEventListener('click', (event) =>{
  let target = event.target;
  if (target.classList.contains('popup-close')){
    popup.style.display = 'none';
+   let closeClear = target.parentNode.parentNode;
+   closeClear.querySelector('input[name = "user_phone"]').value = '';
+   closeClear.querySelector('input[name = "user_name"]').value = '';
+
  } 
  
  else {
    if (!target.closest('.popup-content')) {
      popup.style.display = 'none';
+     deleteInputs(event);
    }
  }
 })
+
 };
 
-togglePopup('.popup-call', '.call-btn');
-togglePopup('.popup-discount', '.discount-btn');
-togglePopup('.popup-check', '.check-btn');
-togglePopup('.popup-consultation', '.consultation-btn');
+togglePopup('.popup-call', '.call-btn', false);
+togglePopup('.popup-discount', '.discount-btn', true);
+togglePopup('.popup-check', '.check-btn', false);
+togglePopup('.popup-consultation', '.consultation-btn', false);
+
+
+
+// Задать вопрос
+
+const askQuestion = () => {
+  question.addEventListener('change', event => {
+    question.value = question.value.replace(/[^а-яё\s]/ig, '');
+    questionForm.question = question.value;
+    togglePopup('.popup-consultation', '.consultation-btn', false);
+  })
+}
+
+askQuestion();
 
 
 
@@ -81,7 +153,7 @@ const accordion = () => {
 accordion();
 
 
-// онлайн-конструктор септика !!!доделать!!!
+// онлайн-конструктор септика
 
 const constructor = () => {
         // общий блок всего калькулятора
@@ -100,7 +172,6 @@ const constructor = () => {
         panelBodyBtn = accordion.querySelectorAll('.construct-btn'),
 
         // ПЕРВЫЙ КОЛОДЕЦ (ПРИЕМНЫЙ) 
-         // wellTextOne = document.getElementById('one-well'),
          // диаметр первого колодца
          wellDiameterOne = document.getElementById('one-well-diameter'),
          // количество колец первого
@@ -128,23 +199,13 @@ const constructor = () => {
         // переключатели в первом и третьем этапе калькулятора
         inner = document.querySelectorAll('.onoffswitch-inner');
 
+        // расстояние до дома
+  const distance = document.getElementById('distance');
+
 
   let checkbox = document.querySelectorAll('.onoffswitch-checkbox');
 
-  let calcMemory = {
-    userName: '',
-    userPhone: '',
-    cameras: 0,
-    floors: 0,
-    diameterOneValue: 0,
-    ringsOneValue: 0,
-    diameterTwoValue: 0,
-    ringsTwoValue: 0,
-    sum: 0
-  };
-
-// console.log(panelBodyBtn);
-
+  // хождение по этапам калькулятора
   for (let i = 0; i < panel.length; i++) {
 
   panel[i].addEventListener('click', (event) => {
@@ -159,7 +220,7 @@ const constructor = () => {
   });
   }
 
-  
+  // количество колодцев
   const showWells = (cameras) => {
     if (cameras === 1) {
       wellTextTwo.style.display = 'none';
@@ -175,7 +236,7 @@ const constructor = () => {
     }
   }
 
-
+  // мат логика калькулятора
   const sumDiameter = (cameras, floors) => {
 
     let diameterFactorOne = 0, diameterFactorTwo = 0,
@@ -206,7 +267,7 @@ const constructor = () => {
       const diameterTwoValue = +wellDiameterTwoSelect.value;
       const ringsTwoValue = +wellRingsTwoSelect.value;
           
-      // диам2
+      // диаметр2
       diameterFactorTwo = diameterTwoValue === 1.4 ? 0 : 0.2;
 
       // кольца2
@@ -225,8 +286,6 @@ const constructor = () => {
       if (floors === 1) {
         floorsValue = 2000;
       }
-              
-      // console.log('Итого за два: ', sum);
 
       calcMemory.diameterOneValue = diameterOneValue;
       calcMemory.ringsOneValue = ringsOneValue;
@@ -243,8 +302,6 @@ const constructor = () => {
             floorsValue = 1000;
           }
 
-      // console.log('Итого за один: ', sum);
-
       calcMemory.diameterOneValue = diameterOneValue; 
       calcMemory.ringsOneValue = ringsOneValue;
       calcMemory.diameterTwoValue = null;
@@ -255,12 +312,10 @@ const constructor = () => {
     calcResult.value = `${calcMemory.sum} рублей`;
   }
 
-
+  
   const getDiameter = (cameras, floors) => {
-    // console.log('cameras', cameras);
-    // console.log('floors', floors);
+
     sumDiameter(calcMemory.cameras, calcMemory.floors);
-    
   }
 
   panelTwo.addEventListener('change', event => {
@@ -268,14 +323,13 @@ const constructor = () => {
     const target = event.target;
       if (target.matches('select')) {
         sumDiameter(calcMemory.cameras, calcMemory.floors);
-        console.log(calcMemory);
     }
   });
 
+// сколько камер содержит колодец
 const getSepticType = () => {
   if (checkbox[0].checked === true){
     calcMemory.cameras = 1;
-    console.log('cameras at start: ', calcMemory.cameras);
     return calcMemory.cameras;
   }
   else {
@@ -283,11 +337,10 @@ const getSepticType = () => {
     return calcMemory.cameras;
   }
 }
-
+// первичное значение днища
 const getFloorsType = () => {
   if (checkbox[1].checked === true){
     calcMemory.floors = 1;
-    console.log('floors at start: ', calcMemory.floors);
     return calcMemory.floors;
   }
   else {
@@ -295,24 +348,8 @@ const getFloorsType = () => {
     return calcMemory.floors;
   }
 }
-//  inner.addEventListener('click', () => {
-//   if (checkbox.checked === true) 
-//     {
-//       checkbox.checked = false;
-//       calcMemory.cameras = 2;
-//       showWells(calcMemory.cameras);
-//       getDiameter(calcMemory.cameras);
-      
-//     }
-//     else {
-//       checkbox.checked = true;
-//       calcMemory.cameras = 1;
-//       showWells(calcMemory.cameras);
-//       getDiameter(calcMemory.cameras);
-//     }
-   
-//  });
 
+// есть ли днище у колодца
 const getFloorValue = (floorStatus) => {
   if (floorStatus === 0) {
     calcMemory.floors = 0;
@@ -324,6 +361,7 @@ const getFloorValue = (floorStatus) => {
   }
 }
 
+// первичное количество камер у колодца
 const getCamerasValue = (camerasStatus) => {
   if (camerasStatus === 1) {
     calcMemory.cameras = 1;
@@ -335,6 +373,7 @@ const getCamerasValue = (camerasStatus) => {
   }
 }
 
+// переключатель чекбоксов
 const checkTheStage = (checkboxValue) => {
   if (checkboxValue === 1) {
   if (checkbox.checked === true){
@@ -360,9 +399,16 @@ else {
     
   }
 }
-
 }
 
+// сколько метров до дома
+const getDistance = () => {
+  distance.addEventListener('input', event => {
+    distance.value = distance.value.replace(/[^\d\+]/g, '');
+    calcMemory.distance = distance.value;
+  })
+}
+// определение необходимого чекбокса
 inner.forEach((item) =>{
   item.addEventListener('click', (event) =>{
     if (event.target.parentNode.htmlFor === 'myonoffswitch'){
@@ -371,7 +417,6 @@ inner.forEach((item) =>{
       checkTheStage(1);
       showWells(calcMemory.cameras);
       getDiameter(calcMemory.cameras, calcMemory.floors);
-      console.log(calcMemory);
     }
     else if (event.target.parentNode.htmlFor === 'myonoffswitch-two'){
       checkbox = document.querySelectorAll('.onoffswitch-checkbox');
@@ -379,7 +424,6 @@ inner.forEach((item) =>{
       checkTheStage(2);
       showWells(calcMemory.cameras);
       getDiameter(calcMemory.cameras, calcMemory.floors);
-      console.log(calcMemory);
     }
     
   })
@@ -389,6 +433,7 @@ inner.forEach((item) =>{
  getFloorsType();
  showWells(calcMemory.cameras);
  getDiameter(calcMemory.cameras, calcMemory.floors);
+ getDistance();
  
 }
  constructor();
@@ -400,11 +445,7 @@ inner.forEach((item) =>{
  const sendForm = () => {
   const errorMessage = 'Что-то пошло не так...',
         loadMessage = 'Загрузка...',
-        successMessage = 'Спасибо! Мы скоро с вами свяжемся!',
-        inputMessage = 'Заполните все поля!';
- 
-  const statusMessage = document.createElement('div');
-  statusMessage.style.cssText = 'font-size: 2rem;';
+        successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
  
   document.addEventListener('input', (event) => {
  
@@ -429,36 +470,40 @@ inner.forEach((item) =>{
  
     if (target.closest('.form-question')) {
       checkInputText(target);
+      questionForm.question = question.value;
     }
  });
 
  
  
  document.addEventListener('submit', (event) => {
-
-  const removeMessage = () => {
-    setTimeout(() => {
-     statusMessage.remove();
-    }, 3000);
-   };
-
-
   const target = event.target;
   event.preventDefault();
   if (target.querySelector('input[name = "user_phone"]'))
   {
-    if (target.querySelector('input[name = "user_phone"]').value === '') 
+    if (target.querySelector('input[name = "user_phone"]').value !== ''){
+      if (isCalc) {
+        calcMemory.userPhone = target.querySelector('input[name = "user_phone"]').value;
+      } else
+      questionForm.userPhone = target.querySelector('input[name = "user_phone"]').value;
+    }
+    else if (target.querySelector('input[name = "user_phone"]').value === '') 
   {
     target.appendChild(statusMessage);
     statusMessage.textContent = inputMessage;
     statusMessage.style.cssText = 'color: red';
     removeMessage();
    return;
-  }}
-  else 
+  }} 
   if (target.querySelector('input[name = "user_name"]')) 
    {
-    if (target.querySelector('input[name = "user_name"]').value === '')
+     if (target.querySelector('input[name = "user_name"]').value !== '') {
+       if (isCalc) {
+        calcMemory.userName = target.querySelector('input[name = "user_name"]').value;
+       } else
+      questionForm.userName = target.querySelector('input[name = "user_name"]').value;
+     }
+    else if (target.querySelector('input[name = "user_name"]').value === '')
     {
       statusMessage.textContent = inputMessage;
       statusMessage.style.cssText = 'color: red';
@@ -472,11 +517,7 @@ inner.forEach((item) =>{
   statusMessage.style.cssText = 'color: #19b5fe';
 
   const formData = new FormData(target);
-   let body = {};
-   formData.forEach((val, key) => {
-     body[key] = val;
-    // console.log('body: ', body);
-   });
+   let body = isCalc? calcMemory : questionForm;
 
 
  postData(body)
@@ -487,7 +528,7 @@ inner.forEach((item) =>{
  target.appendChild(statusMessage);
  statusMessage.textContent = successMessage;
  statusMessage.style.cssText = 'color: #00FF00';
- deleteInputs();
+ deleteInputs(event);
  removeMessage();
 })
 .catch(error => {
@@ -497,6 +538,8 @@ inner.forEach((item) =>{
  console.error(error);
 });
 });
+
+
 const postData = (body) => {
 
 return fetch('./server.php', {
