@@ -1,10 +1,8 @@
 'use strict';
 
-const statusMessage = document.createElement('div'),
-      inputMessage = 'Заполните все поля!',
-      question = document.querySelector('.form-question'),
-      questionBtn = document.querySelector('.consultation-btn');
-      statusMessage.style.fontSize = '2rem;';
+const statusMessage = document.createElement('div');
+statusMessage.style.fontSize = '2rem;';
+const question = document.querySelector('.form-question');
 
 // является ли модальное окно калькулятором/акцией
 let isCalc = '';
@@ -24,7 +22,7 @@ const deleteInputs = (event) => {
   if (target.querySelector('input[name = "user_name"]')){
     target.querySelector('input[name = "user_name"]').value = '';
   }
-  };
+};
 
 // объект для всех остальных модальных окон
 let questionForm = {
@@ -32,6 +30,7 @@ let questionForm = {
   userName: '',
   userPhone: ''
 }
+
 // объект для акции и калькулятора
 let calcMemory = {
   userName: '',
@@ -51,7 +50,9 @@ let calcMemory = {
 // модальные окна
 const togglePopup = (popupModal, selectorButton, statusCalc) => {
   
- const popup = document.querySelector(popupModal);
+ const popup = document.querySelector(popupModal),
+ questionBtn = document.querySelector('.consultation-btn');
+ const inputMessage = 'Заполните все поля!';
  let popupButton = document.querySelectorAll(selectorButton);
 
 popupButton.forEach((item) => {
@@ -112,21 +113,19 @@ const askQuestion = () => {
 askQuestion();
 
 
-
 // показать больше
-
 const showMore = () => {
- const addSentenceBtn = document.querySelector('.add-sentence-btn'),
-       sentence = document.querySelector('.sentence'),
-       itemBlocks = sentence.querySelectorAll('.col-xs-12');
- addSentenceBtn.addEventListener('click', (event) => {
-  itemBlocks.forEach((elem) => {
-   elem.classList.remove('visible-sm-block');
-   elem.classList.remove('hidden');
-  });
-  addSentenceBtn.style.display = 'none';
- })
-}
+  const addSentenceBtn = document.querySelector('.add-sentence-btn'),
+        sentence = document.querySelector('.sentence'),
+        itemBlocks = sentence.querySelectorAll('.col-xs-12');
+  addSentenceBtn.addEventListener('click', (event) => {
+   itemBlocks.forEach((elem) => {
+    elem.classList.remove('visible-sm-block');
+    elem.classList.remove('hidden');
+   });
+   addSentenceBtn.style.display = 'none';
+  })
+ }
 showMore();
 
 
@@ -156,68 +155,87 @@ accordion();
 // онлайн-конструктор септика
 
 const constructor = () => {
-        // общий блок всего калькулятора
-        const accordion = document.getElementById('accordion'),
+// общий блок всего калькулятора
+const accordion = document.getElementById('accordion'),
 
-        // каждый этап в калькуляторе
-        panel = accordion.querySelectorAll('.panel'),
-        // содержимое в окне этапа в калькуляторе
-        panelBody = accordion.querySelectorAll('.panel-body'),
-        // окно этапа в калькуляторе
-        panelCollapse = accordion.querySelectorAll('.panel-collapse'),
-        // второй этап в калькуляторе
-        panelTwo = document.getElementById('collapseTwo'),
+// каждый этап в калькуляторе
+panel = accordion.querySelectorAll('.panel'),
+// содержимое в окне этапа в калькуляторе
+panelBody = accordion.querySelectorAll('.panel-body'),
+// окно этапа в калькуляторе
+panelCollapse = accordion.querySelectorAll('.panel-collapse'),
+// второй этап в калькуляторе
+panelTwo = document.getElementById('collapseTwo'),
 
-        // кнопка "Следующий шаг"
-        panelBodyBtn = accordion.querySelectorAll('.construct-btn'),
+panelHeading = accordion.querySelectorAll('.panel-heading'),
 
-        // ПЕРВЫЙ КОЛОДЕЦ (ПРИЕМНЫЙ) 
-         // диаметр первого колодца
-         wellDiameterOne = document.getElementById('one-well-diameter'),
-         // количество колец первого
-         wellRingsOne = document.getElementById('one-well-rings'),
+// кнопка "Следующий шаг"
+panelBodyBtn = accordion.querySelectorAll('.construct-btn'),
 
-        // ВТОРОЙ КОЛОДЕЦ (ПРИЕМНЫЙ)
-        // текстовое поле
-        wellTextTwo = document.getElementById('two-well'),
-        // диаметр второго
-        wellDiameterTwo = document.getElementById('two-well-diameter'),
-        // колво колеу второго
-        wellRingsTwo = document.getElementById('two-well-rings'),
+// ПЕРВЫЙ КОЛОДЕЦ (ПРИЕМНЫЙ) 
+  // диаметр первого колодца
+  wellDiameterOne = document.getElementById('one-well-diameter'),
+  // количество колец первого
+  wellRingsOne = document.getElementById('one-well-rings'),
+
+// ВТОРОЙ КОЛОДЕЦ (ПРИЕМНЫЙ)
+// текстовое поле
+wellTextTwo = document.getElementById('two-well'),
+// диаметр второго
+wellDiameterTwo = document.getElementById('two-well-diameter'),
+// колво колеу второго
+wellRingsTwo = document.getElementById('two-well-rings'),
 
 
-        // селекты первого и второго колодцев
-        // первого
-        wellDiameterOneSelect = wellDiameterOne.querySelector('.expand'),
-        wellRingsOneSelect = wellRingsOne.querySelector('.expand'),
-        // второго
-        wellRingsTwoSelect = wellRingsTwo.querySelector('.expand'),
-        wellDiameterTwoSelect = wellDiameterTwo.querySelector('.expand'),
-        
-        // окно результата
-        calcResult = document.getElementById('calc-result'),
-        // переключатели в первом и третьем этапе калькулятора
-        inner = document.querySelectorAll('.onoffswitch-inner');
+// селекты первого и второго колодцев
+// первого
+wellDiameterOneSelect = wellDiameterOne.querySelector('.expand'),
+wellRingsOneSelect = wellRingsOne.querySelector('.expand'),
+// второго
+wellRingsTwoSelect = wellRingsTwo.querySelector('.expand'),
+wellDiameterTwoSelect = wellDiameterTwo.querySelector('.expand'),
 
-        // расстояние до дома
-  const distance = document.getElementById('distance');
+// окно результата
+calcResult = document.getElementById('calc-result'),
+// переключатели в первом и третьем этапе калькулятора
+inner = document.querySelectorAll('.onoffswitch-inner');
+
+// расстояние до дома
+const distance = document.getElementById('distance');
 
 
   let checkbox = document.querySelectorAll('.onoffswitch-checkbox');
 
   // хождение по этапам калькулятора
-  for (let i = 0; i < panel.length; i++) {
-
-  panel[i].addEventListener('click', (event) => {
-    
-    for (let j = 0; j < panelCollapse.length; j++) {
-      event.preventDefault();
-      panelCollapse[j].classList.remove('in');
+  function toggleAcc (index, next){
+    if (next){
+      if (next < panelHeading.length){
+      panelCollapse[index].classList.remove('in');
+      panelCollapse[next].classList.add('in');
+      }
     }
-
-    panelCollapse[i].classList.toggle('in');
-
-  });
+    else {
+      if (panelCollapse[index].classList.contains('in')){
+        panelCollapse[index].classList.remove('in');
+      }
+      else {
+        panelCollapse.forEach((elem) => {
+          elem.classList.remove('in');
+        })
+        panelCollapse[index].classList.add('in');
+      }
+    } 
+    }
+  
+  for (let i = 0; i < panelHeading.length; i++) {
+    panelHeading[i].addEventListener('click', (event) => {
+      event.preventDefault();
+      toggleAcc(i);
+    });
+    panelBodyBtn[i].addEventListener('click', (event) => {
+      event.preventDefault();
+      toggleAcc(i, i+1);
+    });
   }
 
   // количество колодцев
@@ -314,7 +332,6 @@ const constructor = () => {
 
   
   const getDiameter = (cameras, floors) => {
-
     sumDiameter(calcMemory.cameras, calcMemory.floors);
   }
 
