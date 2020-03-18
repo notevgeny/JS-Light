@@ -144,7 +144,7 @@
                             <div class="panel-body">
                                 <img class="type-septic" src="img/constructor/type-septic.png" alt="septic">
                                 <div class="onoffswitch">
-                                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+                                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox first-checkbox"
                                            id="myonoffswitch" checked>
                                     <label class="onoffswitch-label" for="myonoffswitch">
                                         <span class="onoffswitch-inner"></span>
@@ -154,7 +154,7 @@
                                 <img class="type-septic" src="img/constructor/type-septic-two.png" alt="septic">
                                 <p>камерный</p>
                                 <a class="button construct-btn collapsed" data-toggle="collapse"
-                                   data-parent="#accordion" href="#collapseTwo"><span>Следующий шаг</span></a>
+                                   data-parent="#accordion" href="#collapseTwo" id="next-step"><span>Следующий шаг</span></a>
                             </div>
                         </div>
                     </div>
@@ -206,7 +206,7 @@
                                     </select>
                                 </div>
                                 <a class="button construct-btn" data-toggle="collapse" data-parent="#accordion"
-                                   href="#collapseThree"><span>Следующий шаг</span></a>
+                                   href="#collapseThree" id="next-step"><span>Следующий шаг</span></a>
                             </div>
                         </div>
                     </div>
@@ -226,8 +226,8 @@
                                 </p>
 
                                 <div class="onoffswitch">
-                                    <input type="checkbox" name="onoffswitch-two" class="onoffswitch-checkbox"
-                                           id="myonoffswitch-two" checked>
+                                    <input type="checkbox" name="onoffswitch-two" class="onoffswitch-checkbox second-checkbox"
+                                           id="myonoffswitch-two">
                                     <label class="onoffswitch-label" for="myonoffswitch-two">
                                         <span class="onoffswitch-inner"></span>
                                         <span class="onoffswitch-switch"></span>
@@ -235,7 +235,7 @@
                                 </div>
                                 <img class="bottom-septic-img" src="img/constructor/bottom-septic.png" alt="bs">
                                 <a class="button construct-btn" data-toggle="collapse" data-parent="#accordion"
-                                   href="#collapseFour" aria-expanded="false" aria-controls="collapseFour"><span>Следующий шаг</span></a>
+                                   href="#collapseFour" aria-expanded="false" aria-controls="collapseFour" id="next-step"><span>Следующий шаг</span></a>
                             </div>
                         </div>
                     </div>
@@ -254,7 +254,7 @@
                             <div class="panel-body">
                                 <p>Введите расстояние до дома</p>
                                 <input type="text" id="distance">
-                                <button class="button construct-btn discount-btn">Получить расчет и скидку</button>
+                                <button class="button construct-btn discount-btn" id='calc-btn-send'>Получить расчет и скидку</button>
                             </div>
                         </div>
                     </div>
@@ -490,7 +490,7 @@
                 <input type="text" class="form-name" id="name_1" name="user_name" placeholder="Ваше имя">
                 <label for="phone_1">Ваш телефон для получения скидки</label>
                 <input class="phone-user" type="text" id="phone_1" name="user_phone" placeholder="+7(___)___-__-__"
-                       >
+                >
                 <button class="button capture-form-btn" name="submit" type="submit">Получить расчет и скидку</button>
                 <p class="small">Вы получите расчет стоимости с учетом выбора <br>подходящего объема септика. типа
                     грунта, <br> расположения объектов на участке, уровня грунтовых <br> вод, типа фундамента дома и еще
@@ -565,6 +565,6 @@
 </div>
 
 
-<script src="main.js"></script>
+<script src="/dist/main.js"></script>
 </body>
 </html>
