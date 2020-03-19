@@ -230,6 +230,7 @@ const constructor = () => {
    getSepticType();
    getFloorsType();
    showWells(calcMemory.cameras);
+   sumDiameter(calcMemory.cameras, calcMemory.floors);
    getDistance();
    
   }
